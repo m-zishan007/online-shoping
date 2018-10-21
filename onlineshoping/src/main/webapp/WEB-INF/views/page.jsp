@@ -23,9 +23,10 @@
 	window.menu = '${title}';
 </script>
 <!-- Bootstrap core CSS -->
-<link href="${css}/bootstrap.min.css" rel="stylesheet">
+<%-- <link href="${css}/bootstrap.min.css" rel="stylesheet"> --%>
+<link href="${baseURL}${css}/bootstrap.min.css" rel="stylesheet">
 <!-- Custom styles for this template -->
-<link href="${css}/myapp.css" rel="stylesheet">
+<link href="${baseURL}${css}/myapp.css" rel="stylesheet">
 
 </head>
 
@@ -50,6 +51,11 @@
 			<c:if test="${userClickContact == true }">
 				<%@include file="./contact.jsp"%>
 			</c:if>
+			
+			<!-- LOAD ONLY WNEN USER CLICKS CONTACT -->
+			<c:if test="${userClickAllProducts == true  or userClickCategoryProducts == true}">
+				<%@include file="./listProducts.jsp"%>
+			</c:if>
 		</div>
 		<!-- /.container -->
 		<!-- Footer -->
@@ -57,10 +63,10 @@
 
 
 		<!-- Bootstrap core JavaScript -->
-		<script src="${js}/jquery.min.js"></script>
-		<script src="${js}/bootstrap.bundle.min.js"></script>
+		<script src="${baseURL}${js}/jquery.min.js"></script>
+		<script src="${baseURL}${js}/bootstrap.bundle.min.js"></script>
 		<!-- Self coded javascript -->
-		<script src="${js}/myapp.js"></script>
+		<script src="${baseURL}${js}/myapp.js"></script>
 	</div>
 </body>
 

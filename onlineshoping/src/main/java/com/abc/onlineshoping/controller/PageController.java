@@ -1,53 +1,101 @@
 package com.abc.onlineshoping.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.abc.shopingbackend.dao.CategoryDAO;
+import com.abc.shopingbackend.dto.Category;
+
 @Controller
 public class PageController {
-	@RequestMapping(value = {"/", "/home", "index"})
+
+	@Autowired
+	private CategoryDAO categoryDAO;
+	
+	@ModelAttribute("baseURL")
+	public String baseUrl() {
+		return "http://localhost:8080/onlineshoping/";
+	}
+
+	@RequestMapping(value = { "/", "/home", "index" })
 	public ModelAndView index() {
 		ModelAndView mv = new ModelAndView("page");
 		mv.addObject("title", "Home");
+
+		// passing the list of categories
+		mv.addObject("categories", categoryDAO.list());
+
 		mv.addObject("userClickHome", true);
 		return mv;
 	}
-	
-	@RequestMapping(value = {"/about"})
+
+	@RequestMapping(value = { "/about" })
 	public ModelAndView about() {
 		ModelAndView mv = new ModelAndView("page");
 		mv.addObject("title", "About Us");
 		mv.addObject("userClickAbout", true);
 		return mv;
 	}
-	
-	@RequestMapping(value = {"/contact"})
+
+	@RequestMapping(value = { "/contact" })
 	public ModelAndView contact() {
 		ModelAndView mv = new ModelAndView("page");
 		mv.addObject("title", "Contact");
 		mv.addObject("userClickContact", true);
 		return mv;
 	}
-/*	@RequestMapping(value="/test")
-	public ModelAndView test(@RequestParam(value="greeting", required=false) String greeting) {
-		
-		if(greeting == null) {
-			greeting = "hello there";
-		}
+
+	/*
+	 * Method to load all the products and based on category
+	 */
+	@RequestMapping(value = "/show/all/products")
+	public ModelAndView showAllProducts() {
 		ModelAndView mv = new ModelAndView("page");
-		mv.addObject("greeting", greeting);
+		mv.addObject("title", "All Products");
+
+		// passing the list of categories
+		mv.addObject("categories", categoryDAO.list());
+
+		mv.addObject("userClickAllProducts", true);
 		return mv;
-	}*/
+	}
 	
-/*	@RequestMapping(value="/test/{greeting}")
-	public ModelAndView test(@PathVariable("greeting") String greeting) {
-		
-		if(greeting == null) {
-			greeting = "hello there";
-		}
+	@RequestMapping(value = "/show/category/{id}/products")
+	public ModelAndView showCategoryProducts(@PathVariable("id") int id) {
 		ModelAndView mv = new ModelAndView("page");
-		mv.addObject("greeting", greeting);
+		System.out.println("hello");
+		//Category DAO to fetch single category
+		Category category = null;
+		category = categoryDAO.get(id);
+		System.out.println(category);
+		mv.addObject("title", category.getName());
+
+		// passing the list of categories
+		mv.addObject("categories", categoryDAO.list());
+
+		// passing the single category object
+		mv.addObject("category", category);
+
+		mv.addObject("userClickCategoryProducts", true);
 		return mv;
-	}*/
+	}
+	/*
+	 * @RequestMapping(value="/test") public ModelAndView
+	 * test(@RequestParam(value="greeting", required=false) String greeting) {
+	 * 
+	 * if(greeting == null) { greeting = "hello there"; } ModelAndView mv = new
+	 * ModelAndView("page"); mv.addObject("greeting", greeting); return mv; }
+	 */
+
+	/*
+	 * @RequestMapping(value="/test/{greeting}") public ModelAndView
+	 * test(@PathVariable("greeting") String greeting) {
+	 * 
+	 * if(greeting == null) { greeting = "hello there"; } ModelAndView mv = new
+	 * ModelAndView("page"); mv.addObject("greeting", greeting); return mv; }
+	 */
 }
